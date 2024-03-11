@@ -105,12 +105,14 @@
       (progn
         (add-hook 'dired-after-readin-hook 'dired-collapse 'append 'local)
         (add-hook 'dired-subtree-after-insert-hook 'dired-collapse 'append 'local)
+        (add-hook 'dired-omit-mode-hook 'dired-collapse 'append 'local)
         ;; collapse the buffer only if it is not empty (= we haven't
         ;; yet read in the current directory)
         (unless (= (buffer-size) 0)
           (dired-collapse)))
     (remove-hook 'dired-after-readin-hook 'dired-collapse 'local)
     (remove-hook 'dired-subtree-after-insert-hook 'dired-collapse 'local)
+    (remove-hook 'dired-omit-mode-hook 'dired-collapse 'local)
     (revert-buffer)))
 
 (defun dired-collapse--replace-file (file)
@@ -150,7 +152,8 @@ filename (for example when the final directory is empty)."
           ;; dired-collapse requires all the details. So we disable
           ;; invisibility here temporarily.
           (buffer-invisibility-spec nil)
-          (inhibit-read-only t))
+          (inhibit-read-only t)
+          (rgx (and dired-omit-mode (dired-omit-regexp))))
       (save-excursion
         (goto-char (point-min))
         (while (not (eobp))
@@ -165,6 +168,11 @@ filename (for example when the final directory is empty)."
                             (setq files (directory-files path
                                                          'full
                                                          directory-files-no-dot-files-regexp))
+                            (or (not dired-omit-mode)
+                                (setq files (cl-remove-if
+                                              (lambda(f)
+                                                (string-match rgx (file-name-nondirectory f)))
+                                              files)))
                             (= 1 (length files)))
                   (setq path (car files)))
                 (if (and (not files)
