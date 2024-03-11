@@ -1,4 +1,22 @@
-* [dired-hacks](#dired-hacks--)
+# This fork ...
+provides five pull-requests to enhance the upstream feature `dired-collapse`:
+* `global-dired-collapse-mode` : Automatically applies the feature to all new dired buffers.
+* `dired-omit-mode` support : When dired-omit-mode is in effect, decide whether to collapse a path
+based upon the number of files that would be visible, ie. exclude the
+omitted files from the count.
+* Make fontification of collapsed lines optional : This adds a customization boolean variable `dired-collapse-fontify`. The effect is to allow users to fontify the collapsed lines in other ways..
+* Fix and eliminate needless dependencies : Fix one bug, and eliminate the need for three packages.
+* Improve performance for huge flat directories : The lisp function `length` is notoriously slow.
+
+The motivation for these five pull-requests was to support integrating the `dired-collapse` package into [diredc](https://github.com/Boruch-Baum/emacs-diredc), see there.
+
+The repository for this fork is located at [https://github.com/Boruch-Baum/dired-hacks](https://github.com/Boruch-Baum/dired-hacks)
+
+Below begins the upstream README.md
+
+---
+
+# [dired-hacks](#dired-hacks--)
 * [Contribute!](#contribute)
 * [Packages](#packages)
    * [dired-hacks-utils](#dired-hacks-utils)
